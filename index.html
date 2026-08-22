@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truva HR Automation Master Suite</title>
+  <meta name="description" content="Generate ID Cards, Visiting Cards, and Welcome Note Posters in real-time with single-entry information and independent customization.">
+
+  <!-- Typography: Outfit, Poppins, Montserrat, Kalam, Dela Gothic One -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Kalam:wght@400;700&family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Outfit:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Master Application Header -->
+  <header class="master-header">
+    <div class="brand-section">
+      <div class="brand-logo-icon">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </div>
+      <div class="brand-titles">
+        <h1>Truva HR Studio <span class="brand-badge">Master Suite</span></h1>
+        <p class="brand-tagline">Fill Once &bull; Generate ID Card, Visiting Card &amp; Welcome Note</p>
+      </div>
+    </div>
+
+    <!-- Navigation Views -->
+    <nav class="view-tabs">
+      <button class="view-tab-btn active" data-view="overview">
+        <i class="fa-solid fa-table-cells-large"></i> All-in-One Dashboard
+      </button>
+      <button class="view-tab-btn" data-view="idcard">
+        <i class="fa-solid fa-id-badge"></i> ID Card Studio
+      </button>
+      <button class="view-tab-btn" data-view="visiting">
+        <i class="fa-solid fa-address-card"></i> Visiting Card Studio
+      </button>
+      <button class="view-tab-btn" data-view="welcome">
+        <i class="fa-solid fa-note-sticky"></i> Welcome Note Studio
+      </button>
+    </nav>
+
+    <!-- Master Export Action -->
+    <div class="header-actions">
+      <button id="btn-download-all-zip" class="btn btn-primary">
+        <i class="fa-solid fa-file-zipper"></i> Download All Assets (ZIP)
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Body Layout -->
+  <div class="app-layout">
+    <!-- Master Sidebar -->
+    <aside class="master-sidebar">
+      <!-- Sidebar Tabs -->
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab-btn active" data-tab="profile">
+          <i class="fa-solid fa-user-pen"></i> Profile
+        </button>
+        <button class="sidebar-tab-btn" data-tab="photo">
+          <i class="fa-solid fa-image"></i> Photo &amp; AI
+        </button>
+        <button class="sidebar-tab-btn" data-tab="asset">
+          <i class="fa-solid fa-sliders"></i> Asset Controls
+        </button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="sidebar-content-area">
+        <!-- ================= TAB 1: MASTER PROFILE ================= -->
+        <div id="tab-content-profile" class="sidebar-tab-content">
+          <!-- 1. Employee Core Details (Clean empty inputs for fresh entry) -->
+          <div class="form-section">
+            <div class="section-header">
+              <span class="section-title"><i class="fa-solid fa-user-tie"></i> Employee Core Details</span>
+              <span class="section-tag">Global Sync</span>
+            </div>
+
+            <div class="input-group">
+              <label for="master-fullname">Full Name</label>
+              <input type="text" id="master-fullname" placeholder="e.g. Tabish Khan">
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="master-firstname">First Name</label>
+                <input type="text" id="master-firstname" placeholder="e.g. Tabish">
+              </div>
+              <div class="input-group">
+                <label for="master-department">Title / Dept</label>
+                <input type="text" id="master-department" placeholder="e.g. Designer">
+              </div>
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="master-email">Email Address</label>
+                <input type="email" id="master-email" placeholder="e.g. tabish@truva.in">
+              </div>
+              <div class="input-group">
+                <label for="master-phone">Phone Number</label>
+                <input type="text" id="master-phone" placeholder="e.g. +91 98765 43210">
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. QR Code & Website CTA Text (Prefilled with default brand links) -->
+          <div class="form-section">
+            <div class="section-header">
+              <span class="section-title"><i class="fa-solid fa-qrcode"></i> QR Code &amp; Website CTA</span>
+              <span class="section-tag">Visiting Card</span>
+            </div>
+
+            <div class="input-group">
+              <label for="master-qr">QR Target URL</label>
+              <input type="text" id="master-qr" value="https://truva.in" placeholder="e.g. https://truva.in">
+              <small class="input-hint">Dynamic QR code generated in real-time.</small>
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="master-cta1">Website CTA Line 1</label>
+                <input type="text" id="master-cta1" value="Learn more at" placeholder="e.g. Learn more at">
+              </div>
+              <div class="input-group">
+                <label for="master-cta2">Website CTA Line 2</label>
+                <input type="text" id="master-cta2" value="Truva.in" placeholder="e.g. Truva.in">
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Welcome Note Q&A -->
+          <div class="form-section">
+            <div class="section-header">
+              <span class="section-title"><i class="fa-solid fa-comments"></i> Welcome Note Q&amp;A</span>
+              <span class="section-tag">TruVibe Check</span>
+            </div>
+
+            <div class="input-group">
+              <label for="master-bubble">Fun Questions &amp; Answers</label>
+              <textarea id="master-bubble" rows="5" placeholder="Question - Answer (one per line)&#10;e.g. Comfort movie? - Modern Family&#10;Superpower? - Time travel"></textarea>
+              <small class="input-hint">Use <code> - </code> between Question and Answer to highlight answers in brand orange.</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 2: PHOTO & AI ================= -->
+        <div id="tab-content-photo" class="sidebar-tab-content" style="display: none;">
+          <div class="form-section">
+            <div class="section-header">
+              <span class="section-title"><i class="fa-solid fa-camera"></i> Employee Portrait</span>
+            </div>
+
+            <!-- Upload Drop Zone -->
+            <div class="upload-dropzone" id="photo-dropzone">
+              <input type="file" id="master-photo-input" accept="image/*" style="display: none;">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <div class="upload-title">Click or Drag Photo Here</div>
+              <div class="upload-sub">Supports PNG, JPG, JPEG, WebP</div>
+            </div>
+
+            <!-- Uploaded Preview -->
+            <div class="photo-preview-card" id="photo-preview-card" style="display: none;">
+              <div class="photo-thumb-info">
+                <img id="photo-thumb-img" src="" alt="Thumbnail" class="photo-thumb-img">
+                <span id="photo-filename" class="photo-filename">portrait.jpg</span>
+              </div>
+              <button id="btn-remove-photo" class="btn-icon-danger" title="Remove Photo">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+
+            <div class="ai-status-box" id="ai-status-box" style="margin-top: 12px;">
+              <div class="spinner" id="ai-spinner" style="display: none;"></div>
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span id="ai-status-text">Studio AI Ready (HD Neural Cutout)</span>
+            </div>
+          </div>
+
+          <!-- AI Engine Selection & Refinements -->
+          <div class="form-section">
+            <div class="section-header">
+              <span class="section-title"><i class="fa-solid fa-microchip"></i> Background Removal Engine</span>
+            </div>
+
+            <div class="input-group">
+              <label for="bg-engine-select">Select AI Quality</label>
+              <select id="bg-engine-select">
+                <option value="studio-ai" selected>Studio AI (IMG.LY - High Definition &amp; Free)</option>
+                <option value="removebg">Remove.bg API (Cloud Ultra-HD)</option>
+                <option value="mediapipe">Fast Local AI (MediaPipe)</option>
+                <option value="none">Original Portrait (No Cutout)</option>
+              </select>
+            </div>
+
+            <!-- Remove.bg API Key Input -->
+            <div class="input-group" id="removebg-key-group" style="display: none;">
+              <label for="removebg-api-key">Remove.bg API Key</label>
+              <input type="text" id="removebg-api-key" value="bes5RSxRG2cJptvTHcaoCfQC" placeholder="Paste Remove.bg API key">
+              <small class="input-hint">Free key from remove.bg provides 50 free HD cutouts/mo.</small>
+            </div>
+
+            <!-- Manual Threshold & Feathering for Fast AI -->
+            <div id="manual-tuning-group" style="display: none;">
+              <div class="slider-group" style="margin-top: 10px;">
+                <div class="slider-header">
+                  <label for="slider-ai-threshold">Mask Edge Threshold</label>
+                  <span class="slider-val-badge" id="val-ai-threshold">0.50</span>
+                </div>
+                <input type="range" id="slider-ai-threshold" min="0.1" max="0.9" step="0.01" value="0.5">
+              </div>
+
+              <div class="slider-group">
+                <div class="slider-header">
+                  <label for="slider-ai-feather">Edge Softness (Feather)</label>
+                  <span class="slider-val-badge" id="val-ai-feather">2.5px</span>
+                </div>
+                <input type="range" id="slider-ai-feather" min="0" max="8" step="0.5" value="2.5">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 3: ACTIVE ASSET CONTROLS ================= -->
+        <div id="tab-content-asset" class="sidebar-tab-content" style="display: none;">
+          <!-- 3A. ID Card Controls -->
+          <div id="controls-idcard" class="asset-controls-sub">
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-title"><i class="fa-solid fa-arrows-up-down-left-right"></i> ID Card Photo Adjust</span>
+              </div>
+
+              <div class="slider-group">
+                <div class="slider-header">
+                  <label for="id-slider-scale">Photo Scale</label>
+                  <span class="slider-val-badge" id="id-val-scale">100%</span>
+                </div>
+                <input type="range" id="id-slider-scale" min="30" max="250" value="100">
+              </div>
+
+              <div class="input-row">
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="id-slider-x">X Offset</label>
+                    <span class="slider-val-badge" id="id-val-x">0px</span>
+                  </div>
+                  <input type="range" id="id-slider-x" min="-300" max="300" value="0">
+                </div>
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="id-slider-y">Y Offset</label>
+                    <span class="slider-val-badge" id="id-val-y">0px</span>
+                  </div>
+                  <input type="range" id="id-slider-y" min="-300" max="300" value="0">
+                </div>
+              </div>
+
+              <div class="slider-group">
+                <div class="slider-header">
+                  <label for="id-slider-rotate">Rotation</label>
+                  <span class="slider-val-badge" id="id-val-rotate">0°</span>
+                </div>
+                <input type="range" id="id-slider-rotate" min="-180" max="180" value="0">
+              </div>
+
+              <div class="input-row">
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="id-slider-bright">Brightness</label>
+                    <span class="slider-val-badge" id="id-val-bright">100%</span>
+                  </div>
+                  <input type="range" id="id-slider-bright" min="50" max="150" value="100">
+                </div>
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="id-slider-contrast">Contrast</label>
+                    <span class="slider-val-badge" id="id-val-contrast">100%</span>
+                  </div>
+                  <input type="range" id="id-slider-contrast" min="50" max="150" value="100">
+                </div>
+              </div>
+
+              <div class="toggle-item" style="margin-top: 6px;">
+                <span class="toggle-label-text">Grayscale Portrait</span>
+                <label class="switch">
+                  <input type="checkbox" id="id-toggle-grayscale" checked>
+                  <span class="slider-switch"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-title"><i class="fa-solid fa-stamp"></i> ID Branding &amp; Logo</span>
+              </div>
+              <div class="input-group">
+                <label for="id-logo-type">Card Logo</label>
+                <select id="id-logo-type">
+                  <option value="truva">Truva Tent (Official)</option>
+                  <option value="custom">Custom Upload</option>
+                </select>
+              </div>
+              <div class="input-group" id="id-custom-logo-wrap" style="display: none;">
+                <input type="file" id="id-custom-logo-input" accept="image/*">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-title"><i class="fa-solid fa-pen-ruler"></i> Independent Text Override</span>
+              </div>
+              <div class="toggle-item">
+                <span class="toggle-label-text">Decouple from Master Profile</span>
+                <label class="switch">
+                  <input type="checkbox" id="id-toggle-override">
+                  <span class="slider-switch"></span>
+                </label>
+              </div>
+              <div id="id-override-fields" style="display: none; margin-top: 10px;">
+                <div class="input-group">
+                  <label for="id-custom-name">Custom Name on Card</label>
+                  <input type="text" id="id-custom-name" placeholder="Custom Card Name">
+                </div>
+                <div class="input-group">
+                  <label for="id-custom-title">Custom Title on Card</label>
+                  <input type="text" id="id-custom-title" placeholder="Custom Card Title">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3B. Visiting Card Controls -->
+          <div id="controls-visiting" class="asset-controls-sub" style="display: none;">
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-title"><i class="fa-solid fa-table-columns"></i> Layout Mode</span>
+              </div>
+              <div class="toggle-item">
+                <span class="toggle-label-text">Stack Phone Below Email</span>
+                <label class="switch">
+                  <input type="checkbox" id="vc-toggle-stack">
+                  <span class="slider-switch"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-title"><i class="fa-solid fa-pen-ruler"></i> Independent Text Override</span>
+              </div>
+              <div class="toggle-item">
+                <span class="toggle-label-text">Decouple from Master Profile</span>
+                <label class="switch">
+                  <input type="checkbox" id="vc-toggle-override">
+                  <span class="slider-switch"></span>
+                </label>
+              </div>
+              <div id="vc-override-fields" style="display: none; margin-top: 10px;">
+                <div class="input-group">
+                  <label for="vc-custom-name">Visiting Card Name</label>
+                  <input type="text" id="vc-custom-name" placeholder="Custom Visiting Name">
+                </div>
+                <div class="input-group">
+                  <label for="vc-custom-dept">Visiting Card Dept</label>
+                  <input type="text" id="vc-custom-dept" placeholder="Custom Visiting Dept">
+                </div>
+                <div class="input-group">
+                  <label for="vc-custom-email">Visiting Card Email</label>
+                  <input type="email" id="vc-custom-email" placeholder="Custom Visiting Email">
+                </div>
+                <div class="input-group">
+                  <label for="vc-custom-phone">Visiting Card Phone</label>
+                  <input type="text" id="vc-custom-phone" placeholder="Custom Visiting Phone">
+                </div>
+                <div class="input-group">
+                  <label for="vc-custom-cta1">Website CTA Line 1</label>
+                  <input type="text" id="vc-custom-cta1" placeholder="Custom CTA Line 1">
+                </div>
+                <div class="input-group">
+                  <label for="vc-custom-cta2">Website CTA Line 2</label>
+                  <input type="text" id="vc-custom-cta2" placeholder="Custom CTA Line 2">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3C. Welcome Note Controls -->
+          <div id="controls-welcome" class="asset-controls-sub" style="display: none;">
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-title"><i class="fa-solid fa-hand-pointer"></i> Poster Layout Tuning</span>
+              </div>
+
+              <!-- Photo Controls -->
+              <div class="slider-group">
+                <div class="slider-header">
+                  <label for="wn-slider-photo-scale">Photo Size</label>
+                  <span class="slider-val-badge" id="wn-val-photo-scale">62%</span>
+                </div>
+                <input type="range" id="wn-slider-photo-scale" min="20" max="120" value="62">
+              </div>
+
+              <div class="input-row">
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="wn-slider-photo-x">Photo X</label>
+                    <span class="slider-val-badge" id="wn-val-photo-x">62%</span>
+                  </div>
+                  <input type="range" id="wn-slider-photo-x" min="0" max="100" value="62">
+                </div>
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="wn-slider-photo-y">Photo Y</label>
+                    <span class="slider-val-badge" id="wn-val-photo-y">66%</span>
+                  </div>
+                  <input type="range" id="wn-slider-photo-y" min="0" max="100" value="66">
+                </div>
+              </div>
+
+              <div class="input-row">
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="wn-slider-photo-rot">Photo Rotate</label>
+                    <span class="slider-val-badge" id="wn-val-photo-rot">0°</span>
+                  </div>
+                  <input type="range" id="wn-slider-photo-rot" min="-45" max="45" value="0">
+                </div>
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="wn-slider-photo-tilt">Photo Tilt</label>
+                    <span class="slider-val-badge" id="wn-val-photo-tilt">0°</span>
+                  </div>
+                  <input type="range" id="wn-slider-photo-tilt" min="-25" max="25" value="0">
+                </div>
+              </div>
+
+              <!-- Bubble Controls -->
+              <div class="slider-group" style="margin-top: 10px;">
+                <div class="slider-header">
+                  <label for="wn-slider-bubble-scale">Speech Bubble Size</label>
+                  <span class="slider-val-badge" id="wn-val-bubble-scale">58%</span>
+                </div>
+                <input type="range" id="wn-slider-bubble-scale" min="20" max="100" value="58">
+              </div>
+
+              <div class="input-row">
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="wn-slider-bubble-x">Bubble X</label>
+                    <span class="slider-val-badge" id="wn-val-bubble-x">41%</span>
+                  </div>
+                  <input type="range" id="wn-slider-bubble-x" min="0" max="100" value="41">
+                </div>
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="wn-slider-bubble-y">Bubble Y</label>
+                    <span class="slider-val-badge" id="wn-val-bubble-y">35%</span>
+                  </div>
+                  <input type="range" id="wn-slider-bubble-y" min="0" max="100" value="35">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">
+                <span class="section-title"><i class="fa-solid fa-pen-ruler"></i> Independent Text Override</span>
+              </div>
+              <div class="toggle-item">
+                <span class="toggle-label-text">Decouple from Master Profile</span>
+                <label class="switch">
+                  <input type="checkbox" id="wn-toggle-override">
+                  <span class="slider-switch"></span>
+                </label>
+              </div>
+              <div id="wn-override-fields" style="display: none; margin-top: 10px;">
+                <div class="input-group">
+                  <label for="wn-custom-first">First Name on Poster</label>
+                  <input type="text" id="wn-custom-first" placeholder="Custom First Name">
+                </div>
+                <div class="input-group">
+                  <label for="wn-custom-dept">Department on Poster</label>
+                  <input type="text" id="wn-custom-dept" placeholder="Custom Department">
+                </div>
+                <div class="input-group">
+                  <label for="wn-custom-bubble">Poster Q&amp;A Text</label>
+                  <textarea id="wn-custom-bubble" rows="4" placeholder="Custom Q&amp;A Text"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Master Workspace Content Area -->
+    <main class="master-workspace">
+      <!-- ================= VIEW 1: ALL-IN-ONE OVERVIEW DASHBOARD ================= -->
+      <section id="view-overview" class="view-section" style="display: flex; flex-direction: column; height: 100%;">
+        <div class="workspace-topbar">
+          <div class="workspace-title-group">
+            <h2><i class="fa-solid fa-table-cells-large"></i> Live Multi-Asset Overview</h2>
+          </div>
+          <div class="theme-info" style="font-size: 12px; color: var(--text-muted);">
+            <span>Real-time Multi-Asset Synchronization</span>
+          </div>
+        </div>
+
+        <div class="workspace-canvas-area">
+          <div class="overview-grid">
+            <!-- Asset 1: ID Card -->
+            <div class="asset-preview-card">
+              <div class="asset-card-header">
+                <span class="asset-card-title"><i class="fa-solid fa-id-badge" style="color: var(--primary-orange);"></i> ID Card</span>
+                <span class="asset-card-badge">687 &times; 1024 px</span>
+              </div>
+              <div class="asset-card-body">
+                <div class="id-card-wrapper">
+                  <canvas id="overview-id-canvas" width="687" height="1024"></canvas>
+                </div>
+              </div>
+              <div class="asset-card-footer">
+                <button class="btn btn-secondary btn-sm" onclick="document.querySelector('.view-tab-btn[data-view=\'idcard\']').click();">
+                  <i class="fa-solid fa-sliders"></i> Edit Details
+                </button>
+                <button class="btn btn-primary btn-sm btn-download-id-png">
+                  <i class="fa-solid fa-download"></i> Download PNG
+                </button>
+              </div>
+            </div>
+
+            <!-- Asset 2: Visiting Card -->
+            <div class="asset-preview-card">
+              <div class="asset-card-header">
+                <span class="asset-card-title"><i class="fa-solid fa-address-card" style="color: var(--primary-orange);"></i> Visiting Card</span>
+                <span class="asset-card-badge">Front &amp; Back &bull; 300 DPI</span>
+              </div>
+              <div class="asset-card-body">
+                <div class="visiting-cards-row">
+                  <div class="visiting-card-box">
+                    <canvas id="overview-vis-front-canvas" width="600" height="1050"></canvas>
+                  </div>
+                  <div class="visiting-card-box">
+                    <canvas id="overview-vis-back-canvas" width="600" height="1050"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="asset-card-footer">
+                <button class="btn btn-secondary btn-sm" onclick="document.querySelector('.view-tab-btn[data-view=\'visiting\']').click();">
+                  <i class="fa-solid fa-sliders"></i> Edit Details
+                </button>
+                <button class="btn btn-primary btn-sm btn-download-vis-pdf">
+                  <i class="fa-solid fa-file-pdf"></i> Download PDF
+                </button>
+              </div>
+            </div>
+
+            <!-- Asset 3: Welcome Note Poster -->
+            <div class="asset-preview-card">
+              <div class="asset-card-header">
+                <span class="asset-card-title"><i class="fa-solid fa-note-sticky" style="color: var(--primary-orange);"></i> Welcome Note</span>
+                <span class="asset-card-badge">A4 Poster &bull; TruVibe</span>
+              </div>
+              <div class="asset-card-body">
+                <div class="welcome-poster-wrapper">
+                  <canvas id="overview-welcome-canvas" width="595" height="842"></canvas>
+                </div>
+              </div>
+              <div class="asset-card-footer">
+                <button class="btn btn-secondary btn-sm" onclick="document.querySelector('.view-tab-btn[data-view=\'welcome\']').click();">
+                  <i class="fa-solid fa-sliders"></i> Edit Details
+                </button>
+                <button class="btn btn-primary btn-sm btn-download-welcome-png">
+                  <i class="fa-solid fa-download"></i> Download PNG
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 2: DEDICATED ID CARD STUDIO ================= -->
+      <section id="view-idcard" class="view-section" style="display: none; flex-direction: column; height: 100%;">
+        <div class="workspace-topbar">
+          <div class="workspace-title-group">
+            <h2><i class="fa-solid fa-id-badge"></i> ID Card Studio</h2>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary btn-sm btn-download-id-png">
+              <i class="fa-solid fa-download"></i> Download High-Res ID Card
+            </button>
+          </div>
+        </div>
+
+        <div class="workspace-canvas-area">
+          <div class="studio-canvas-container">
+            <div class="id-card-studio-frame">
+              <canvas id="studio-id-canvas" width="687" height="1024"></canvas>
+              <div class="canvas-hint-tag">
+                <i class="fa-solid fa-arrows-up-down-left-right"></i> Drag photo to pan
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 3: DEDICATED VISITING CARD STUDIO ================= -->
+      <section id="view-visiting" class="view-section" style="display: none; flex-direction: column; height: 100%;">
+        <div class="workspace-topbar">
+          <div class="workspace-title-group">
+            <h2><i class="fa-solid fa-address-card"></i> Visiting Card Studio</h2>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary btn-sm btn-download-vis-pdf">
+              <i class="fa-solid fa-file-pdf"></i> Download Print-Ready PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="workspace-canvas-area">
+          <div class="visiting-studio-grid">
+            <div class="visiting-studio-card-unit">
+              <span class="visiting-studio-card-label">Front Side (Branded)</span>
+              <div class="visiting-card-large">
+                <canvas id="studio-vis-front-canvas" width="1200" height="2100"></canvas>
+              </div>
+            </div>
+            <div class="visiting-studio-card-unit">
+              <span class="visiting-studio-card-label">Back Side (Details &amp; QR)</span>
+              <div class="visiting-card-large">
+                <canvas id="studio-vis-back-canvas" width="1200" height="2100"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 4: DEDICATED WELCOME NOTE STUDIO ================= -->
+      <section id="view-welcome" class="view-section" style="display: none; flex-direction: column; height: 100%;">
+        <div class="workspace-topbar">
+          <div class="workspace-title-group">
+            <h2><i class="fa-solid fa-note-sticky"></i> Welcome Note Studio (TruVibe Check)</h2>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary btn-sm btn-download-welcome-png">
+              <i class="fa-solid fa-download"></i> Download A4 High-Res Poster
+            </button>
+          </div>
+        </div>
+
+        <div class="workspace-canvas-area">
+          <div id="welcome-studio-frame" class="poster-studio-frame">
+            <!-- Background Plate -->
+            <img src="assets/truvibe-base.png" alt="Base Template" class="poster-base-img" draggable="false">
+
+            <!-- 1. Interactive Photo Layer -->
+            <div id="wn-layer-photo" class="transform-layer" style="display: none;">
+              <img id="wn-photo-img" src="" alt="Employee" style="width: 100%; display: block; pointer-events: none;" draggable="false">
+              <div id="wn-handles-photo" style="display: none;">
+                <div class="transform-handle handle-nw"></div>
+                <div class="transform-handle handle-ne"></div>
+                <div class="transform-handle handle-se"></div>
+                <div class="transform-handle handle-sw"></div>
+                <div class="handle-rotate-stem"></div>
+                <div class="handle-rotate" title="Rotate Photo"></div>
+              </div>
+            </div>
+
+            <!-- 2. Interactive Speech Bubble Layer -->
+            <div id="wn-layer-bubble" class="transform-layer" style="position: absolute;">
+              <ul id="wn-bubble-list" style="list-style: none; padding: 0; margin: 0; pointer-events: none;"></ul>
+              <div id="wn-handles-bubble" style="display: none;">
+                <div class="transform-handle handle-nw"></div>
+                <div class="transform-handle handle-ne"></div>
+                <div class="transform-handle handle-se"></div>
+                <div class="transform-handle handle-sw"></div>
+                <div class="handle-rotate-stem"></div>
+                <div class="handle-rotate" title="Rotate Bubble"></div>
+              </div>
+            </div>
+
+            <!-- 3. Interactive Name & Department Layer -->
+            <div id="wn-layer-name" class="transform-layer" style="position: absolute;">
+              <div id="wn-name-display" style="font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; color: #fff; line-height: 1; pointer-events: none;"></div>
+              <div id="wn-dept-display" style="font-family: 'Kalam', cursive; font-size: 16px; font-weight: 700; color: #fff; line-height: 1; margin-top: 4px; pointer-events: none;"></div>
+              <div id="wn-handles-name" style="display: none;">
+                <div class="transform-handle handle-nw"></div>
+                <div class="transform-handle handle-ne"></div>
+                <div class="transform-handle handle-se"></div>
+                <div class="transform-handle handle-sw"></div>
+                <div class="handle-rotate-stem"></div>
+                <div class="handle-rotate" title="Rotate Name"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Embedded Assets (Zero Taint & 100% Offline) -->
+  <script src="js/assets-data.js"></script>
+
+  <!-- Offline Vendors & Libraries -->
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/qrcode.min.js"></script>
+  <script src="vendor/jszip.min.js"></script>
+
+  <!-- MediaPipe Selfie Segmentation (Fast AI Cutout) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
+
+  <!-- Application Modules -->
+  <script src="js/id-card.js"></script>
+  <script src="js/visiting-card.js"></script>
+  <script src="js/welcome-note.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
