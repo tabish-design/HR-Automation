@@ -15,11 +15,17 @@
     init: function () {
       const baseSrc = (window.HR_ASSETS && window.HR_ASSETS.truvibe_base) ? window.HR_ASSETS.truvibe_base : 'assets/truvibe-base.png';
 
-      return new Promise((resolve) => {
+      const imgPromise = new Promise((resolve) => {
         const img = new Image();
         img.onload = () => { WelcomeNoteRenderer.assets.baseTemplate = img; WelcomeNoteRenderer.assets.loaded = true; resolve(); };
         img.onerror = () => { console.warn('Could not load base template'); WelcomeNoteRenderer.assets.loaded = true; resolve(); };
         img.src = baseSrc;
+      });
+
+      const fontPromise = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+
+      return Promise.all([imgPromise, fontPromise]).then(() => {
+        WelcomeNoteRenderer.assets.loaded = true;
       });
     },
 
@@ -45,7 +51,7 @@
 
       ctx.clearRect(0, 0, w, h);
 
-      // 1. Base Template
+      // 1. Base Template Plate
       if (WelcomeNoteRenderer.assets.baseTemplate && WelcomeNoteRenderer.assets.baseTemplate.complete) {
         ctx.drawImage(WelcomeNoteRenderer.assets.baseTemplate, 0, 0, w, h);
       } else {
@@ -53,7 +59,7 @@
         ctx.fillRect(0, 0, w, h);
       }
 
-      // 2. Employee Photo
+      // 2. Employee Portrait Photo
       const photoImg = masterState.maskedCanvas || masterState.photoImage;
       if (photoImg) {
         ctx.save();
@@ -69,7 +75,7 @@
           ctx.transform(1, 0, Math.tan(tiltRad), 1, 0, 0);
         }
 
-        const aspect = photoImg.height / photoImg.width;
+        const aspect = (photoImg.naturalHeight || photoImg.height) / (photoImg.naturalWidth || photoImg.width || 1);
         const pw = pScale;
         const ph = pScale * aspect;
 
@@ -77,11 +83,11 @@
         ctx.restore();
       }
 
-      // 3. Speech Bubble Content
+      // 3. Speech Bubble Content (With Accurate Multiline Word-Wrapping)
       const bubbleText = noteState.overrideText ? (noteState.bubbleText || '') : (masterState.bubbleText || '');
-      const lines = WelcomeNoteRenderer.parseBubbleLines(bubbleText);
+      const items = WelcomeNoteRenderer.parseBubbleLines(bubbleText);
 
-      if (lines.length > 0) {
+      if (items.length > 0) {
         ctx.save();
         const bx = (noteState.bubbleX / 100) * w;
         const by = (noteState.bubbleY / 100) * h;
@@ -90,29 +96,66 @@
         ctx.translate(bx, by);
         ctx.rotate(((noteState.bubbleRotate || 0) * Math.PI) / 180);
 
-        const fontSize = Math.max(10, Math.round(bScale * 0.053));
-        const lineSpacing = Math.round(fontSize * 1.35);
-        const itemGap = Math.round(bScale * 0.028);
+        const fontSize = Math.max(11, bScale * 0.053);
+        const lineSpacing = fontSize * 1.32;
+        const itemGap = bScale * 0.028;
+        const maxLineWidth = bScale;
 
         ctx.font = `600 ${fontSize}px "Kalam", cursive, sans-serif`;
         ctx.textBaseline = 'top';
 
-        let currentY = -((lines.length * (lineSpacing + itemGap)) / 2);
+        // Pre-process items into wrapped visual lines
+        const renderedItems = [];
+        items.forEach(item => {
+          const qWords = (item.question || '').split(' ').filter(Boolean).map(w => ({ text: w, color: '#1a1a1a' }));
+          const aWords = (item.answer || '').split(' ').filter(Boolean).map(w => ({ text: w, color: '#ee6c2d' }));
+          const allWords = [...qWords, ...aWords];
+
+          const itemLines = [];
+          let currentLine = [];
+          let currentWidth = 0;
+
+          allWords.forEach(wObj => {
+            const wMeasure = ctx.measureText(wObj.text + ' ').width;
+            if (currentLine.length > 0 && currentWidth + wMeasure > maxLineWidth) {
+              itemLines.push(currentLine);
+              currentLine = [wObj];
+              currentWidth = wMeasure;
+            } else {
+              currentLine.push(wObj);
+              currentWidth += wMeasure;
+            }
+          });
+
+          if (currentLine.length > 0) {
+            itemLines.push(currentLine);
+          }
+          renderedItems.push(itemLines);
+        });
+
+        // Compute total block height to vertically center in bubble
+        let totalBlockHeight = 0;
+        renderedItems.forEach((lines, idx) => {
+          totalBlockHeight += lines.length * lineSpacing;
+          if (idx < renderedItems.length - 1) totalBlockHeight += itemGap;
+        });
+
+        let curY = -totalBlockHeight / 2;
         const startX = -bScale / 2;
 
-        lines.forEach(item => {
-          let textX = startX;
-
-          ctx.fillStyle = '#1a1a1a';
-          ctx.fillText(item.question, textX, currentY);
-          const qWidth = ctx.measureText(item.question + ' ').width;
-
-          if (item.answer) {
-            ctx.fillStyle = '#ee6c2d';
-            ctx.fillText(item.answer, textX + qWidth, currentY);
+        renderedItems.forEach((lines, idx) => {
+          lines.forEach(lineWords => {
+            let curX = startX;
+            lineWords.forEach(wObj => {
+              ctx.fillStyle = wObj.color;
+              ctx.fillText(wObj.text, curX, curY);
+              curX += ctx.measureText(wObj.text + ' ').width;
+            });
+            curY += lineSpacing;
+          });
+          if (idx < renderedItems.length - 1) {
+            curY += itemGap;
           }
-
-          currentY += lineSpacing + itemGap;
         });
 
         ctx.restore();
@@ -131,21 +174,28 @@
         ctx.translate(nx, ny);
         ctx.rotate(((noteState.nameRotate || 0) * Math.PI) / 180);
 
-        const nameFontSize = Math.max(14, Math.round(nScale * 0.16));
-        const deptFontSize = Math.max(10, Math.round(nScale * 0.096));
+        const nameFontSize = Math.max(14, nScale * 0.16);
+        const deptFontSize = Math.max(10, nScale * 0.096);
+        const marginGap = nScale * 0.018;
+
+        const totalNameH = nameFontSize + marginGap + deptFontSize;
+        const startY = -totalNameH / 2;
+        const startX = -nScale / 2;
 
         if (empFirstName) {
           ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'left';
           ctx.textBaseline = 'top';
           ctx.font = `800 ${nameFontSize}px "Outfit", "Poppins", sans-serif`;
-          ctx.fillText(empFirstName, -nScale / 2, -nameFontSize);
+          ctx.fillText(empFirstName, startX, startY);
         }
 
         if (empDept) {
           ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'top';
           ctx.font = `700 ${deptFontSize}px "Kalam", cursive, sans-serif`;
-          ctx.fillText(empDept, -nScale / 2, -nameFontSize + nameFontSize * 1.15);
+          ctx.fillText(empDept, startX, startY + nameFontSize + marginGap);
         }
 
         ctx.restore();

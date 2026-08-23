@@ -936,12 +936,37 @@ input:checked + .slider-switch:before {
   pointer-events: none;
 }
 
-/* Transform Box & Handles (Photoshop / Figma style) */
 .transform-layer {
   position: absolute;
   cursor: move;
   transform-origin: center center;
   will-change: transform, left, top;
+}
+
+#wn-layer-bubble {
+  container-type: inline-size;
+}
+
+#wn-layer-name {
+  container-type: inline-size;
+}
+
+#wn-bubble-list li {
+  font-size: 5.3cqw;
+  line-height: 1.32;
+  margin-bottom: 2.8cqw;
+  word-break: break-word;
+}
+
+#wn-name-display {
+  font-size: 16cqw !important;
+  line-height: 1 !important;
+}
+
+#wn-dept-display {
+  font-size: 9.6cqw !important;
+  line-height: 1 !important;
+  margin-top: 1.8cqw !important;
 }
 
 .transform-layer.selected {

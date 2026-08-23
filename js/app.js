@@ -441,7 +441,7 @@
       const lines = window.WelcomeNoteRenderer.parseBubbleLines(text);
 
       bubbleList.innerHTML = lines.map(item => `
-        <li style="display: block; font-family: 'Kalam', cursive; font-size: 11px; line-height: 1.35; margin-bottom: 6px;">
+        <li style="display: block; font-family: 'Kalam', cursive;">
           <span style="color: #1a1a1a;">${escapeHtml(item.question)} </span>
           <span style="color: #ee6c2d;">${escapeHtml(item.answer)}</span>
         </li>
