@@ -122,33 +122,52 @@
         ctx.font = `600 ${fontSize}px "Kalam", cursive, sans-serif`;
         ctx.textBaseline = 'top';
 
-        // Pre-process items into wrapped visual lines
+        // Pre-process items into wrapped visual lines (Question line(s) followed by Answer line(s))
         const renderedItems = [];
         items.forEach(item => {
-          const qWords = (item.question || '').split(' ').filter(Boolean).map(w => ({ text: w, color: '#1a1a1a' }));
-          const aWords = (item.answer || '').split(' ').filter(Boolean).map(w => ({ text: w, color: '#ee6c2d' }));
-          const allWords = [...qWords, ...aWords];
-
           const itemLines = [];
-          let currentLine = [];
-          let currentWidth = 0;
 
-          allWords.forEach(wObj => {
-            const wMeasure = ctx.measureText(wObj.text + ' ').width;
-            if (currentLine.length > 0 && currentWidth + wMeasure > maxLineWidth) {
-              itemLines.push(currentLine);
-              currentLine = [wObj];
-              currentWidth = wMeasure;
-            } else {
-              currentLine.push(wObj);
-              currentWidth += wMeasure;
-            }
-          });
-
-          if (currentLine.length > 0) {
-            itemLines.push(currentLine);
+          // 1. Question line(s)
+          if (item.question) {
+            const qWords = item.question.split(' ').filter(Boolean).map(w => ({ text: w, color: '#1a1a1a' }));
+            let qLine = [];
+            let qWidth = 0;
+            qWords.forEach(wObj => {
+              const wMeasure = ctx.measureText(wObj.text + ' ').width;
+              if (qLine.length > 0 && qWidth + wMeasure > maxLineWidth) {
+                itemLines.push(qLine);
+                qLine = [wObj];
+                qWidth = wMeasure;
+              } else {
+                qLine.push(wObj);
+                qWidth += wMeasure;
+              }
+            });
+            if (qLine.length > 0) itemLines.push(qLine);
           }
-          renderedItems.push(itemLines);
+
+          // 2. Answer line(s) (always on a separate line below the question)
+          if (item.answer) {
+            const aWords = item.answer.split(' ').filter(Boolean).map(w => ({ text: w, color: '#ee6c2d' }));
+            let aLine = [];
+            let aWidth = 0;
+            aWords.forEach(wObj => {
+              const wMeasure = ctx.measureText(wObj.text + ' ').width;
+              if (aLine.length > 0 && aWidth + wMeasure > maxLineWidth) {
+                itemLines.push(aLine);
+                aLine = [wObj];
+                aWidth = wMeasure;
+              } else {
+                aLine.push(wObj);
+                aWidth += wMeasure;
+              }
+            });
+            if (aLine.length > 0) itemLines.push(aLine);
+          }
+
+          if (itemLines.length > 0) {
+            renderedItems.push(itemLines);
+          }
         });
 
         // Compute total block height to vertically center in bubble

@@ -470,8 +470,8 @@
       if (lines.length > 0) {
         bubbleList.innerHTML = lines.map(item => `
           <li>
-            ${item.question ? `<span style="color: #1a1a1a; font-weight: 700;">${escapeHtml(item.question)} </span>` : ''}
-            ${item.answer ? `<span style="color: #ee6c2d; font-weight: 700;">${escapeHtml(item.answer)}</span>` : ''}
+            ${item.question ? `<div class="bubble-q" style="color: #1a1a1a; font-weight: 700;">${escapeHtml(item.question)}</div>` : ''}
+            ${item.answer ? `<div class="bubble-a" style="color: #ee6c2d; font-weight: 700; margin-top: 1px;">${escapeHtml(item.answer)}</div>` : ''}
           </li>
         `).join('');
       } else {
