@@ -397,9 +397,10 @@
 
       const studioVisBack = document.getElementById('studio-vis-back-canvas');
       if (studioVisBack) window.VisitingCardRenderer.drawBack(studioVisBack, state.master, state.visitingCard);
-    } else if (state.activeView === 'welcome') {
-      updateWelcomeStudioDOM();
     }
+
+    // Always update Welcome Note Studio DOM so it is synchronized
+    updateWelcomeStudioDOM();
   }
 
   // --- Welcome Note Interactive DOM Studio Updater ---
@@ -410,13 +411,21 @@
     const wn = state.welcomeNote;
     const m = state.master;
 
+    // 0. Base Template Image
+    const baseImgEl = document.getElementById('wn-base-img');
+    if (baseImgEl && window.HR_ASSETS && window.HR_ASSETS.truvibe_base) {
+      if (baseImgEl.src !== window.HR_ASSETS.truvibe_base) {
+        baseImgEl.src = window.HR_ASSETS.truvibe_base;
+      }
+    }
+
     // 1. Photo Layer
     const photoLayer = document.getElementById('wn-layer-photo');
     const photoImg = document.getElementById('wn-photo-img');
-    const portraitSource = m.maskedCanvas ? m.maskedCanvas.toDataURL() : (m.photoDataUrl || 'assets/placeholder-user.jpg');
+    const portraitSource = m.maskedCanvas ? m.maskedCanvas.toDataURL() : (m.photoDataUrl || '');
 
     if (photoLayer && photoImg) {
-      if (m.photoImage || m.photoDataUrl) {
+      if (portraitSource) {
         photoLayer.style.display = 'block';
         photoImg.src = portraitSource;
         photoLayer.style.left = `${wn.photoX}%`;
@@ -440,12 +449,17 @@
       const text = wn.overrideText ? wn.bubbleText : m.bubbleText;
       const lines = window.WelcomeNoteRenderer.parseBubbleLines(text);
 
-      bubbleList.innerHTML = lines.map(item => `
-        <li style="display: block; font-family: 'Kalam', cursive;">
-          <span style="color: #1a1a1a;">${escapeHtml(item.question)} </span>
-          <span style="color: #ee6c2d;">${escapeHtml(item.answer)}</span>
-        </li>
-      `).join('');
+      if (lines.length > 0) {
+        bubbleLayer.style.display = 'block';
+        bubbleList.innerHTML = lines.map(item => `
+          <li>
+            <span style="color: #1a1a1a; font-weight: 700;">${escapeHtml(item.question)} </span>
+            <span style="color: #ee6c2d; font-weight: 700;">${escapeHtml(item.answer)}</span>
+          </li>
+        `).join('');
+      } else {
+        bubbleLayer.style.display = 'none';
+      }
     }
 
     // 3. Name & Department Layer
@@ -463,6 +477,12 @@
 
       nameTitleEl.textContent = empFirst;
       deptTitleEl.textContent = empDept;
+
+      if (!empFirst && !empDept) {
+        nameLayer.style.display = 'none';
+      } else {
+        nameLayer.style.display = 'block';
+      }
     }
 
     updateTransformSelectionHandles();
@@ -1156,6 +1176,12 @@
       setupIdCardInteractions();
       setupWelcomeNoteInteractions();
       setupExportActions();
+
+      // Set base template src from embedded assets
+      const baseImgEl = document.getElementById('wn-base-img');
+      if (baseImgEl && window.HR_ASSETS && window.HR_ASSETS.truvibe_base) {
+        baseImgEl.src = window.HR_ASSETS.truvibe_base;
+      }
 
       // Initial QR Code & Render with prefilled URL
       window.VisitingCardRenderer.updateQRCode(state.master.qrUrl, () => {

@@ -945,28 +945,46 @@ input:checked + .slider-switch:before {
 
 #wn-layer-bubble {
   container-type: inline-size;
+  min-width: 140px;
 }
 
 #wn-layer-name {
   container-type: inline-size;
+  min-width: 120px;
+}
+
+#wn-bubble-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
 }
 
 #wn-bubble-list li {
-  font-size: 5.3cqw;
-  line-height: 1.32;
-  margin-bottom: 2.8cqw;
+  font-family: 'Kalam', cursive, sans-serif;
+  font-size: clamp(10px, 5.3cqw, 15px);
+  line-height: 1.35;
+  margin-bottom: clamp(4px, 2.8cqw, 8px);
   word-break: break-word;
 }
 
 #wn-name-display {
-  font-size: 16cqw !important;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(18px, 16cqw, 32px) !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
   line-height: 1 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 #wn-dept-display {
-  font-size: 9.6cqw !important;
+  font-family: 'Kalam', cursive, sans-serif;
+  font-size: clamp(12px, 9.6cqw, 20px) !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
   line-height: 1 !important;
-  margin-top: 1.8cqw !important;
+  margin-top: clamp(2px, 1.8cqw, 6px) !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .transform-layer.selected {
