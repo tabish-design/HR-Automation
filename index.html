@@ -16,6 +16,9 @@
 
   <!-- Master Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Embedded Assets (Zero Taint & 100% Offline) -->
+  <script src="js/assets-data.js"></script>
 </head>
 <body>
   <!-- Master Application Header -->
@@ -465,6 +468,48 @@
                   <input type="range" id="wn-slider-bubble-y" min="0" max="100" value="35">
                 </div>
               </div>
+
+              <div class="slider-group">
+                <div class="slider-header">
+                  <label for="wn-slider-bubble-rot">Bubble Rotate</label>
+                  <span class="slider-val-badge" id="wn-val-bubble-rot">0°</span>
+                </div>
+                <input type="range" id="wn-slider-bubble-rot" min="-45" max="45" value="0">
+              </div>
+
+              <!-- Name & Department Controls -->
+              <div class="slider-group" style="margin-top: 10px;">
+                <div class="slider-header">
+                  <label for="wn-slider-name-scale">Name &amp; Dept Size</label>
+                  <span class="slider-val-badge" id="wn-val-name-scale">50%</span>
+                </div>
+                <input type="range" id="wn-slider-name-scale" min="20" max="100" value="50">
+              </div>
+
+              <div class="input-row">
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="wn-slider-name-x">Name X</label>
+                    <span class="slider-val-badge" id="wn-val-name-x">25%</span>
+                  </div>
+                  <input type="range" id="wn-slider-name-x" min="0" max="100" value="25">
+                </div>
+                <div class="slider-group" style="flex: 1;">
+                  <div class="slider-header">
+                    <label for="wn-slider-name-y">Name Y</label>
+                    <span class="slider-val-badge" id="wn-val-name-y">78%</span>
+                  </div>
+                  <input type="range" id="wn-slider-name-y" min="0" max="100" value="78">
+                </div>
+              </div>
+
+              <div class="slider-group">
+                <div class="slider-header">
+                  <label for="wn-slider-name-rot">Name Rotate</label>
+                  <span class="slider-val-badge" id="wn-val-name-rot">0°</span>
+                </div>
+                <input type="range" id="wn-slider-name-rot" min="-45" max="45" value="0">
+              </div>
             </div>
 
             <div class="form-section">
@@ -702,9 +747,6 @@
       </section>
     </main>
   </div>
-
-  <!-- Embedded Assets (Zero Taint & 100% Offline) -->
-  <script src="js/assets-data.js"></script>
 
   <!-- Offline Vendors & Libraries -->
   <script src="vendor/jspdf.umd.min.js"></script>

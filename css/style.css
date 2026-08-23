@@ -941,6 +941,33 @@ input:checked + .slider-switch:before {
   cursor: move;
   transform-origin: center center;
   will-change: transform, left, top;
+  touch-action: none;
+  user-select: none;
+}
+
+#wn-layer-photo {
+  min-width: 60px;
+  min-height: 60px;
+}
+
+.photo-placeholder-box {
+  min-width: 120px;
+  min-height: 140px;
+  border: 2px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.photo-placeholder-box::after {
+  content: 'Photo Area';
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 #wn-layer-bubble {
@@ -988,30 +1015,33 @@ input:checked + .slider-switch:before {
 }
 
 .transform-layer.selected {
-  outline: 2px solid #2563eb;
+  outline: 2px dashed #2563eb;
+  outline-offset: 4px;
 }
 
 .transform-handle {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
   background: #ffffff;
-  border: 1.5px solid #2563eb;
-  border-radius: 2px;
-  z-index: 100;
+  border: 2px solid #2563eb;
+  border-radius: 3px;
+  z-index: 1000;
+  touch-action: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-.handle-nw { top: -6px; left: -6px; cursor: nwse-resize; }
-.handle-ne { top: -6px; right: -6px; cursor: nesw-resize; }
-.handle-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
-.handle-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+.handle-nw { top: -11px; left: -11px; cursor: nwse-resize; }
+.handle-ne { top: -11px; right: -11px; cursor: nesw-resize; }
+.handle-se { bottom: -11px; right: -11px; cursor: nwse-resize; }
+.handle-sw { bottom: -11px; left: -11px; cursor: nesw-resize; }
 
 .handle-rotate-stem {
   position: absolute;
-  top: -18px;
+  top: -24px;
   left: 50%;
-  width: 1px;
-  height: 18px;
+  width: 2px;
+  height: 16px;
   background: #2563eb;
   transform: translateX(-50%);
   pointer-events: none;
@@ -1019,16 +1049,18 @@ input:checked + .slider-switch:before {
 
 .handle-rotate {
   position: absolute;
-  top: -24px;
+  top: -38px;
   left: 50%;
   transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   background: #ffffff;
-  border: 1.5px solid #2563eb;
+  border: 2px solid #2563eb;
   border-radius: 50%;
   cursor: grab;
-  z-index: 101;
+  z-index: 1001;
+  touch-action: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 /* Toast Notifications */

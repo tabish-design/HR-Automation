@@ -425,15 +425,19 @@
     const portraitSource = m.maskedCanvas ? m.maskedCanvas.toDataURL() : (m.photoDataUrl || '');
 
     if (photoLayer && photoImg) {
+      photoLayer.style.display = 'block';
+      photoLayer.style.left = `${wn.photoX}%`;
+      photoLayer.style.top = `${wn.photoY}%`;
+      photoLayer.style.width = `${wn.photoScale}%`;
+      photoLayer.style.transform = `translate(-50%, -50%) rotate(${wn.photoRotate || 0}deg) skewX(${wn.photoTilt || 0}deg)`;
+
       if (portraitSource) {
-        photoLayer.style.display = 'block';
+        photoImg.style.display = 'block';
         photoImg.src = portraitSource;
-        photoLayer.style.left = `${wn.photoX}%`;
-        photoLayer.style.top = `${wn.photoY}%`;
-        photoLayer.style.width = `${wn.photoScale}%`;
-        photoLayer.style.transform = `translate(-50%, -50%) rotate(${wn.photoRotate}deg) skewX(${wn.photoTilt || 0}deg)`;
+        photoLayer.classList.remove('photo-placeholder-box');
       } else {
-        photoLayer.style.display = 'none';
+        photoImg.style.display = 'none';
+        photoLayer.classList.add('photo-placeholder-box');
       }
     }
 
@@ -441,16 +445,16 @@
     const bubbleLayer = document.getElementById('wn-layer-bubble');
     const bubbleList = document.getElementById('wn-bubble-list');
     if (bubbleLayer && bubbleList) {
+      bubbleLayer.style.display = 'block';
       bubbleLayer.style.left = `${wn.bubbleX}%`;
       bubbleLayer.style.top = `${wn.bubbleY}%`;
       bubbleLayer.style.width = `${wn.bubbleScale}%`;
-      bubbleLayer.style.transform = `translate(-50%, -50%) rotate(${wn.bubbleRotate}deg)`;
+      bubbleLayer.style.transform = `translate(-50%, -50%) rotate(${wn.bubbleRotate || 0}deg)`;
 
       const text = wn.overrideText ? wn.bubbleText : m.bubbleText;
       const lines = window.WelcomeNoteRenderer.parseBubbleLines(text);
 
       if (lines.length > 0) {
-        bubbleLayer.style.display = 'block';
         bubbleList.innerHTML = lines.map(item => `
           <li>
             <span style="color: #1a1a1a; font-weight: 700;">${escapeHtml(item.question)} </span>
@@ -458,7 +462,11 @@
           </li>
         `).join('');
       } else {
-        bubbleLayer.style.display = 'none';
+        bubbleList.innerHTML = `
+          <li style="color: #94a3b8; font-style: italic;">
+            <span>Add questions in Profile or Text Override...</span>
+          </li>
+        `;
       }
     }
 
@@ -467,21 +475,28 @@
     const nameTitleEl = document.getElementById('wn-name-display');
     const deptTitleEl = document.getElementById('wn-dept-display');
     if (nameLayer && nameTitleEl && deptTitleEl) {
+      nameLayer.style.display = 'block';
       nameLayer.style.left = `${wn.nameX}%`;
       nameLayer.style.top = `${wn.nameY}%`;
       nameLayer.style.width = `${wn.nameScale}%`;
-      nameLayer.style.transform = `translate(-50%, -50%) rotate(${wn.nameRotate}deg)`;
+      nameLayer.style.transform = `translate(-50%, -50%) rotate(${wn.nameRotate || 0}deg)`;
 
       const empFirst = wn.overrideText ? (wn.firstName || '') : (m.firstName || (m.fullName ? m.fullName.split(' ')[0] : ''));
       const empDept = wn.overrideText ? (wn.department || '') : (m.department || '');
 
-      nameTitleEl.textContent = empFirst;
-      deptTitleEl.textContent = empDept;
+      nameTitleEl.textContent = empFirst || 'First Name';
+      deptTitleEl.textContent = empDept || 'Department';
 
-      if (!empFirst && !empDept) {
-        nameLayer.style.display = 'none';
+      if (!empFirst) {
+        nameTitleEl.style.opacity = '0.6';
       } else {
-        nameLayer.style.display = 'block';
+        nameTitleEl.style.opacity = '1';
+      }
+
+      if (!empDept) {
+        deptTitleEl.style.opacity = '0.6';
+      } else {
+        deptTitleEl.style.opacity = '1';
       }
     }
 
@@ -502,6 +517,31 @@
         }
       }
     });
+  }
+
+  function syncWelcomeSliders() {
+    const wn = state.welcomeNote;
+    const sync = (id, valId, val, suffix = '') => {
+      const s = document.getElementById(id);
+      const b = document.getElementById(valId);
+      if (s) s.value = val;
+      if (b) b.textContent = `${val}${suffix}`;
+    };
+    sync('wn-slider-photo-scale', 'wn-val-photo-scale', wn.photoScale, '%');
+    sync('wn-slider-photo-x', 'wn-val-photo-x', wn.photoX, '%');
+    sync('wn-slider-photo-y', 'wn-val-photo-y', wn.photoY, '%');
+    sync('wn-slider-photo-rot', 'wn-val-photo-rot', wn.photoRotate || 0, '°');
+    sync('wn-slider-photo-tilt', 'wn-val-photo-tilt', wn.photoTilt || 0, '°');
+
+    sync('wn-slider-bubble-scale', 'wn-val-bubble-scale', wn.bubbleScale, '%');
+    sync('wn-slider-bubble-x', 'wn-val-bubble-x', wn.bubbleX, '%');
+    sync('wn-slider-bubble-y', 'wn-val-bubble-y', wn.bubbleY, '%');
+    sync('wn-slider-bubble-rot', 'wn-val-bubble-rot', wn.bubbleRotate || 0, '°');
+
+    sync('wn-slider-name-scale', 'wn-val-name-scale', wn.nameScale || 50, '%');
+    sync('wn-slider-name-x', 'wn-val-name-x', wn.nameX || 25, '%');
+    sync('wn-slider-name-y', 'wn-val-name-y', wn.nameY || 78, '%');
+    sync('wn-slider-name-rot', 'wn-val-name-rot', wn.nameRotate || 0, '°');
   }
 
   function escapeHtml(str) {
@@ -741,6 +781,12 @@
     bindSlider('wn-slider-bubble-scale', 'wn-val-bubble-scale', (v) => { state.welcomeNote.bubbleScale = parseFloat(v); renderAllViews(); }, '%');
     bindSlider('wn-slider-bubble-x', 'wn-val-bubble-x', (v) => { state.welcomeNote.bubbleX = parseFloat(v); renderAllViews(); }, '%');
     bindSlider('wn-slider-bubble-y', 'wn-val-bubble-y', (v) => { state.welcomeNote.bubbleY = parseFloat(v); renderAllViews(); }, '%');
+    bindSlider('wn-slider-bubble-rot', 'wn-val-bubble-rot', (v) => { state.welcomeNote.bubbleRotate = parseFloat(v); renderAllViews(); }, '°');
+
+    bindSlider('wn-slider-name-scale', 'wn-val-name-scale', (v) => { state.welcomeNote.nameScale = parseFloat(v); renderAllViews(); }, '%');
+    bindSlider('wn-slider-name-x', 'wn-val-name-x', (v) => { state.welcomeNote.nameX = parseFloat(v); renderAllViews(); }, '%');
+    bindSlider('wn-slider-name-y', 'wn-val-name-y', (v) => { state.welcomeNote.nameY = parseFloat(v); renderAllViews(); }, '%');
+    bindSlider('wn-slider-name-rot', 'wn-val-name-rot', (v) => { state.welcomeNote.nameRotate = parseFloat(v); renderAllViews(); }, '°');
 
     const wnOverrideToggle = document.getElementById('wn-toggle-override');
     if (wnOverrideToggle) {
@@ -1002,7 +1048,9 @@
       } else if (d.mode === 'scale') {
         const dist = Math.hypot(e.clientX - d.cx, e.clientY - d.cy);
         const ratio = dist / d.startDist;
-        const newScale = Math.min(120, Math.max(15, Math.round(d.startScale * ratio * 10) / 10));
+        const minScale = target === 'photo' ? 15 : 20;
+        const maxScale = target === 'photo' ? 120 : 100;
+        const newScale = Math.min(maxScale, Math.max(minScale, Math.round(d.startScale * ratio * 10) / 10));
         state.welcomeNote[`${target}Scale`] = newScale;
       } else if (d.mode === 'rotate') {
         const angle = Math.atan2(e.clientY - d.cy, e.clientX - d.cx);
@@ -1014,6 +1062,7 @@
         state.welcomeNote[`${target}Rotate`] = Math.round(deg * 10) / 10;
       }
 
+      syncWelcomeSliders();
       renderAllViews();
     });
 
