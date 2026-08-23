@@ -31,16 +31,34 @@
 
     parseBubbleLines: function (text) {
       if (!text) return [];
-      return text.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
-        const idx = line.indexOf(' - ');
-        if (idx === -1) {
-          return { question: line, answer: '' };
+      const rawLines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      const items = [];
+
+      for (let i = 0; i < rawLines.length; i++) {
+        const line = rawLines[i];
+        if (line.includes(' - ')) {
+          const idx = line.indexOf(' - ');
+          items.push({
+            question: line.slice(0, idx).trim(),
+            answer: line.slice(idx + 3).trim()
+          });
+        } else if (line.startsWith('-') || line.startsWith('–') || line.startsWith('—')) {
+          const ansText = line.replace(/^[-–—]\s*/, '').trim();
+          if (items.length > 0 && !items[items.length - 1].answer) {
+            items[items.length - 1].answer = ansText;
+          } else {
+            items.push({ question: '', answer: ansText });
+          }
+        } else if (i + 1 < rawLines.length && (rawLines[i + 1].startsWith('-') || rawLines[i + 1].startsWith('–') || rawLines[i + 1].startsWith('—'))) {
+          const qText = line;
+          const aText = rawLines[i + 1].replace(/^[-–—]\s*/, '').trim();
+          items.push({ question: qText, answer: aText });
+          i++; // skip next line
+        } else {
+          items.push({ question: line, answer: '' });
         }
-        return {
-          question: line.slice(0, idx + 1),
-          answer: line.slice(idx + 3)
-        };
-      });
+      }
+      return items;
     },
 
     draw: function (canvas, masterState, noteState) {

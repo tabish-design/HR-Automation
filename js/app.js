@@ -422,7 +422,20 @@
     // 1. Photo Layer
     const photoLayer = document.getElementById('wn-layer-photo');
     const photoImg = document.getElementById('wn-photo-img');
-    const portraitSource = m.maskedCanvas ? m.maskedCanvas.toDataURL() : (m.photoDataUrl || '');
+    let portraitSource = '';
+    if (m.maskedCanvas) {
+      if (typeof m.maskedCanvas.toDataURL === 'function') {
+        portraitSource = m.maskedCanvas.toDataURL();
+      } else if (m.maskedCanvas.src) {
+        portraitSource = m.maskedCanvas.src;
+      }
+    }
+    if (!portraitSource && m.photoDataUrl) {
+      portraitSource = m.photoDataUrl;
+    }
+    if (!portraitSource && m.photoImage && m.photoImage.src) {
+      portraitSource = m.photoImage.src;
+    }
 
     if (photoLayer && photoImg) {
       photoLayer.style.display = 'block';
@@ -457,8 +470,8 @@
       if (lines.length > 0) {
         bubbleList.innerHTML = lines.map(item => `
           <li>
-            <span style="color: #1a1a1a; font-weight: 700;">${escapeHtml(item.question)} </span>
-            <span style="color: #ee6c2d; font-weight: 700;">${escapeHtml(item.answer)}</span>
+            ${item.question ? `<span style="color: #1a1a1a; font-weight: 700;">${escapeHtml(item.question)} </span>` : ''}
+            ${item.answer ? `<span style="color: #ee6c2d; font-weight: 700;">${escapeHtml(item.answer)}</span>` : ''}
           </li>
         `).join('');
       } else {
@@ -849,6 +862,7 @@
         if (thumbImg) thumbImg.src = dataUrl;
         if (filenameEl) filenameEl.textContent = file.name;
 
+        renderAllViews();
         processBackgroundRemoval();
         showToast('Photo uploaded. Processing cutout...', 'success');
       };

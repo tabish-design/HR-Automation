@@ -989,9 +989,9 @@ input:checked + .slider-switch:before {
 
 #wn-bubble-list li {
   font-family: 'Kalam', cursive, sans-serif;
-  font-size: clamp(10px, 5.3cqw, 15px);
-  line-height: 1.35;
-  margin-bottom: clamp(4px, 2.8cqw, 8px);
+  font-size: clamp(9px, 4.6cqw, 13.5px);
+  line-height: 1.28;
+  margin-bottom: clamp(2px, 1.8cqw, 5px);
   word-break: break-word;
 }
 
